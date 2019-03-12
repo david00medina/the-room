@@ -1,0 +1,218 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{sectsty}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{apacite}
+
+\titleformat{\chapter}[display]
+{\normalfont\bfseries}{}{0pt}{\Large}
+\chaptertitlefont{\Huge}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+	frame=lines
+}
+
+\lstset{style=mystyle}
+
+\author{David Alberto Medina Medina
+	\\
+	Dr. Modesto Fernando Castrillon Santana}
+\title{Práctica 5 - Escena}
+\begin{document}
+	\maketitle
+	\tableofcontents
+	\bibliographystyle{apacite}
+	\chapter{Introducción}
+	\textit{Processing} es un es un IDE \textit{opensource} que utiliza \textit{Java} como lenguaje de programación. Este proyecto está desarrollado y mantenido por la \textit{Processing Foundation} que sirve como soporte de aprendizaje para instruir a estudiantes de todo el mundo en el mundo de la codificación dentro del contexto de las artes visuales.
+	
+	El objetivo de este proyecto de laboratorio consiste en utilizar las herramientas de dibujo que nos proporciona el entorno de programación de \textit{Processing} para contruir una escena tridimensional.
+	
+	Durante el desarrollo de esta experiencia, aprenderemos a utilizar las diferentes herramientas gráficas que dispone \textit{Processing} para la representación 3D de objetos gracias a las librerías \textit{OpenGL} que este integra en su framework. Se hace uso de las primitivas que facilitan las tareas de traslación y rotación del sistema de referencia que ofrece la librería de \textit{Processing}.
+	
+	Utilizaremos las primitivas \texttt{camera()} y \texttt{perspective()} que dispone \textit{Processing} para manipular la vista y perspectiva del mundo que generaremos.
+	
+	Además, aprenderemos a utilizar las primitivas que ofrece \textit{Processing} para la gestión de la iluminación y materiales de los objetos tridimensionales.
+	
+	El objetivo de esta experiencia consistirá en crear una escena de una habitación donde podamos utilizar las distintas herramientas de gestión de la iluminación y cámara que ofrece \textit{Processing}.
+	
+	\chapter{Método y materiales}
+	\section{Materiales}
+	El desarrollo de este proyecto se ha llevado a cabo utilizando el IDE de desarrollo de aplicaciones \textit{Java} de \textit{JetBrains}, \textit{IntelliJ}, y las siguientes herramientas:
+	\begin{itemize}
+		\item Texturas de la mesa y pared.
+		\item Modelo \textit{OBJ} de un candelabro nave espacial.
+		\item Librerías propias de \textit{Processing}.
+	\end{itemize}
+	
+	\section{Método}
+	Las siguientes clases que se definenen en este documente se organizan en los siguientes paquetes:
+	\begin{enumerate}
+		\item camera
+		\item light
+		\item object
+		\item player
+		\item scene
+		\item utils
+	\end{enumerate}
+	
+	\subsection{Paquete \texttt{scene}}
+	\subsubsection{Clase \texttt{Scene}}\label{class:scene}
+	En esta clase se define el método principal que heredará de la clase \texttt{PApplet} de \textit{Processing} con el objeto de poder acceder a todas las primitivas de la librería. El método principal debe llamar al método \texttt{PApplet.main()} para poder empezar a utilizar \textit{Processing}.
+	
+	\lstinputlisting[language=Java, firstline=162, lastline=164]{../src/scene/Scene.java}
+	
+	Se definen el tamaño de la ventana y se selecciona el \textit{rederer} \texttt{P3D}.
+	
+	\lstinputlisting[language=Java, firstline=20, lastline=22]{../src/scene/Scene.java}
+	
+	Se inicializan la cámara, la iluminación, el jugador y los objetos que forman parte de la escena. 
+	
+	\lstinputlisting[language=Java, firstline=24, lastline=36]{../src/scene/Scene.java}
+	
+	El método \texttt{placeMouseCenter()} coloca el ratón en el centro de la ventana y se oculta llamando a la primitiva \texttt{noCursor()}.
+	
+	\lstinputlisting[language=Java, firstline=152, lastline=160]{../src/scene/Scene.java}
+	
+	El método \texttt{spawnObjects()} es el responsable de renderizar todos los objetos del mundo y cargar las texturas y materiales de cada uno de ellos según corresponda. Este método llama a su vez a: \texttt{renderFloor(), renderStar(), renderCandle(), renderTable()} y \texttt{renderWall()}.
+	
+	\lstinputlisting[language=Java, firstline=38, lastline=97]{../src/scene/Scene.java}
+	
+	Una vez realizados los ajustes previos, se carga en la ventana todos los componentes de los objetos de la escena haciendo uso de las primitivas \texttt{pushMatrix()} y \texttt{popMatrix()}. En cada iteración del método \texttt{draw()} se refresca el estado del jugador y se ajustan los parámetros de iluminación.
+	
+	\lstinputlisting[language=Java, firstline=99, lastline=136]{../src/scene/Scene.java} 
+	
+	Los parámetros de iluminación son gestionados en el método \texttt{lightSetting()} donde se podrá encender o apagar el iluminado haciendo clic derecho en el ratón. Cuando la iluminación genérica no está habilitada, se establecen los parámetros de iluminación básicos de la escena: ambiente, direccional, especular y punto-luz (\textit{point-light}).
+	
+	\lstinputlisting[language=Java, firstline=138, lastline=150]{../src/scene/Scene.java} 
+	
+	\subsection{Paquete \texttt{light}}
+	\subsubsection{Clase \texttt{Light}}
+	Esta clase utiliza tres vectores que serán los responsables de la gestión de los parámetros de iluminación. Estos vectores controlan la luz ambiental, direccional y especular. El constructor inicializa estos vectores a sus valores por defecto.
+	
+	\lstinputlisting[language=Java, firstline=7, lastline=25]{../src/light/Light.java} 
+	
+	La luz ambiental, especular \texttt{setters}.
+	
+	\lstinputlisting[language=Java, firstline=27, lastline=55]{../src/light/Light.java}
+	
+	Es posible invocar a las primitivas \texttt{lights()} y \texttt{noLights()} llamando a los métodos \texttt{switchOn()} y \texttt{switchOff()}, respectivamente. Sendos métodos modificarán un testigo para indicar si se está trabajando con la iluminación por defecto o no. Se puede acceder a este testigo a través del método \texttt{isOn()}.
+	
+	\lstinputlisting[language=Java, firstline=57, lastline=69]{../src/light/Light.java}
+	
+	Los parámetros de iluminación se llevan a cabo cada vez que se invoca al método \texttt{refresh()}.
+	
+	\lstinputlisting[language=Java, firstline=71, lastline=79]{../src/light/Light.java}
+	
+	\subsection{Paquete \texttt{object}}
+	\subsubsection{Clase \texttt{SceneObject}}
+	Esta clase tiene un constructor que toma como parámetros de entrada el modelo del objeto (\texttt{PShape}), las texturas (\texttt{Texture}) y el material (\texttt{Material}).
+	
+	\lstinputlisting[language=Java, firstline=7, lastline=28]{../src/object/SceneObject.java}
+	
+	Se puede acceder a estas propiedades a través de sus \texttt{getters}.
+	
+	\lstinputlisting[language=Java, firstline=30, lastline=48]{../src/object/SceneObject.java}
+	
+	Se puede actualizar el estado de un objeto \texttt{SceneObject} llamando al método \texttt{refresh()}. El material, textura y posición de una instancia de esta clase son actualizados con cada iteración de \texttt{draw()}.
+	
+	\lstinputlisting[language=Java, firstline=56, lastline=61]{../src/object/SceneObject.java}
+	
+	\subsubsection{Clase \texttt{Texture}}
+	Esta clase es la responsable de almacenar las texturas de una instancia del objeto \texttt{SceneObject}.
+	
+	\lstinputlisting[language=Java, firstline=6, lastline=18]{../src/object/Texture.java}
+	
+	\subsubsection{Clase \texttt{Material}}
+	Esta clase es la responsable de gestionar los parámetros de los materiales que son utilizados por los objetos de la escena. Estos parámetros controlan cómo se comporta cada objeto de la escena ante la luz. El método \texttt{refresh()} es el responsable de llamar a las primitivas en cada iteración.
+	
+	\lstinputlisting[language=Java, firstline=14, lastline=63]{../src/object/Material.java}
+	
+	
+	\subsection{Paquete \texttt{utils}}
+	
+	\subsubsection{CLase \texttt{PVector4D}}\label{class:PVectorUV}
+	Se trata de una clase que extiende de la clase \texttt{PVector} que se utiliza para almacenar de manera ordenada las coordenadas de un vértice y las coordenadas UV de su vector de mapeo correspondiente. 
+	
+	Este clase también será utilizada por \texttt{Camara} para definir los atributos de la primitiva \texttt{perspective()} realizando una llamada al segundo constructor que se ha creado explícitamente para generar un vector 4D.
+	
+	\lstinputlisting[language=Java, firstline=6, lastline=18]{../src/utils/PVector4D.java}
+	
+	\subsection{Paquete \texttt{camera}}
+	\subsubsection{Clase \texttt{Camera}}\label{class:camera}
+	Esta clase pertenece al paquete \texttt{camera} y gestiona todas las operaciones que se realicen sobre la cámara. Un objeto de la clase \texttt{Camera} toma como parámetros de incialización:
+	\begin{description}
+		\item[parent] Objeto de la clase \texttt{PApplet} que nos permitirá llamar a las primitivas de dibujo de \textit{Processing}.
+		\item[pos] Objeto de la clase \texttt{PVector} que define la posición inicial de la cámara.
+		\item[center] Objeto de la clase \texttt{PVector} que define la posición inicial del centro o foco de la cámara.
+		\item[rotation] Objeto de la clase \texttt{PVector} que define la rotación inicial de la cámara.
+		\item[perspective] Objeto de la clase \texttt{PVectorUV} que define los parámetros de la primitiva \texttt{perspective()} con el objeto de definir la perspectiva de la cámara.
+	\end{description}
+
+	\lstinputlisting[language=Java, firstline=8, lastline=41]{../src/camera/Camera.java}
+	
+	La inicialización o \textit{reset} de los parámetros de la cámara a sus valores por defecto se establecen llamando al método \texttt{reset()} (ver \cite{processing-reference}).
+	
+	\lstinputlisting[language=Java, firstline=63, lastline=77]{../src/camera/Camera.java}
+	
+	La posición, centro, rotación y perspectiva de la cámara pueden ser fácilmente modificados llamando a sus correspondientes \textit{setters}.
+	
+	\lstinputlisting[language=Java, firstline=47, lastline=61]{../src/camera/Camera.java}
+	
+	El método \texttt{refresh()} aplica los cambios en la cámara, llamando a la primitiva \texttt{camera()} y \texttt{perspective()} de \textit{Processing}.
+	
+	\lstinputlisting[language=Java, firstline=42, lastline=45]{../src/camera/Camera.java}
+	
+	\subsection{Paquete \texttt{player}}
+	\subsubsection{Clase \texttt{Player}}
+	El jugador de la escena se implementa con una cámara en primera persona por lo que la posición del jugador y de la cámara serán la misma. Los parámetros de entrada más destacados del constructor son: el vector de posición del jugador y el vector de foco o centro (este mismo parámetro será utilizado por \texttt{Camara}). 
+	
+	El método \texttt{setInitialCenter()} ajusta el vector de foco de la cámara utilizando el sistema de coordenadas polares.
+	
+	\lstinputlisting[language=Java, firstline=21, lastline=36]{../src/player/Player.java}
+	
+	El movimiento puede es gestionado por la clase \texttt{moveTo()} permitiéndo mover el jugador en la escena al pulsar las teclas \texttt{W, A, S} y \texttt{D}. Dependiendo de qué tecla se pulse se llamará al método responsable de mover el jugador en la dirección deseada.
+	
+	\lstinputlisting[language=Java, firstline=42, lastline=74]{../src/object/SceneObject.java}
+	
+	El método \texttt{refresh()} actualiza la posición y foco del jugador en el mundo.
+	
+	\lstinputlisting[language=Java, firstline=76, lastline=82]{../src/object/SceneObject.java} 
+	
+	\chapter{Conclusiones}	
+	En esta experiencia hemos aprendido a manipular la vista del mundo con las primitivas \texttt{camara()} y \texttt{perspective()} de \textit{Processing}. Hemos aprendido a manipular los parámetros de iluminación y materiales con el objeto de obtener escenas con un iluminado personalizado.
+	
+	Se ha intentado ver cómo afecta a la iluminación de los objetos la luz ambiental. Este parámetro cambia su posición a lo largo del tiempo, siguiendo la posición de la pequeña esfera del escenario. Se puede observar este cambio influye en la iluminación de los objetos de la escena.
+	
+	\bibliography{references}
+\end{document}

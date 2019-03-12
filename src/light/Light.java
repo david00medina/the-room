@@ -7,7 +7,6 @@ public class Light {
     private PApplet parent;
     private PVector[] ambientLight;
     private PVector[] directionalLight;
-    private PVector lightFalloff;
     private PVector lightSpecular;
     private boolean isOn;
 
@@ -22,7 +21,6 @@ public class Light {
                 new PVector(.0f, .0f, .0f),
                 new PVector(.0f, .0f, 1.f)
         };
-        lightFalloff = new PVector(1.f, .0f, .0f);
         lightSpecular = new PVector(255.f, 255.f, 255.f);
     }
 
@@ -48,12 +46,6 @@ public class Light {
         directionalLight[1].x = x;
         directionalLight[1].y = y;
         directionalLight[1].z = z;
-    }
-
-    public void setLightFalloff(float constant, float linear, float quadratic) {
-        lightFalloff.x = constant;
-        lightFalloff.y = linear;
-        lightFalloff.z = quadratic;
     }
 
     public void setLightSpecular(float r, float g, float b) {
@@ -82,8 +74,6 @@ public class Light {
 
         parent.directionalLight(directionalLight[0].x, directionalLight[0].y, directionalLight[0].z,
                 directionalLight[1].x, directionalLight[1].y, directionalLight[1].z);
-
-        parent.lightFalloff(lightFalloff.x, lightFalloff.y, lightFalloff.z);
 
         parent.lightSpecular(lightSpecular.x, lightSpecular.y, lightSpecular.z);
     }

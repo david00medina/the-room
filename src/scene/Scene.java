@@ -1,6 +1,6 @@
 package scene;
 
-import Player.Player;
+import player.Player;
 import camera.Camera;
 import light.Light;
 import object.Material;
@@ -28,7 +28,7 @@ public class Scene extends PApplet {
         PVector pos = new PVector(width / 2.f, height / 2.f - 500.f, 1050.f);
         PVector center = new PVector(width / 2.f, height / 2.f - 400.f, -200.f);
         PVector rotation = new PVector(.0f, .0f, .0f);
-        player = new Player(this, pos, center, rotation, cam, 5.5f,1.f, 2.5f,.5f);
+        player = new Player(this, pos, center, cam, 5.5f,1.f);
 
         spawnObjects();
         placeMouseCenter();
@@ -51,14 +51,14 @@ public class Scene extends PApplet {
         PVector specular = new PVector(235.f, 155.f, 130.f);
         float shininess = 50.f;
         Material mat = new Material(this, ambient, emissive, specular, shininess);
-        wall = new SceneObject(this, new PVector(width / 2.f, height / 4.f - 150.f, -640.f), wallShape, new Texture(img, null), null, null);
+        wall = new SceneObject(this, new PVector(width / 2.f, height / 4.f - 150.f, -640.f), wallShape, new Texture(img), null);
     }
 
     private void renderTable() {
         PShape tableShape = loadShape("res/models/table/tbl022.obj");
         tableShape.rotateX(radians(90));
         tableShape.scale(.45f);
-        table = new SceneObject(this, new PVector(width / 2.f - 200.f, height / 4.f - 20.f, -50.f), tableShape, null, null, null);
+        table = new SceneObject(this, new PVector(width / 2.f - 200.f, height / 4.f - 20.f, -50.f), tableShape, null, null);
     }
 
     private void renderCandle() {
@@ -70,7 +70,7 @@ public class Scene extends PApplet {
         PVector specular = new PVector(75, 75, 75);
         float shininess = 15.f;
         Material mat = new Material(this, ambient, emissive, specular, shininess);
-        candle = new SceneObject(this, new PVector(width / 2.f - 200.f, height / 4.f - 200.f, -50.f), candleShape, null, null, null);
+        candle = new SceneObject(this, new PVector(width / 2.f - 200.f, height / 4.f - 200.f, -50.f), candleShape, null, null);
     }
 
     private void renderStar() {
@@ -81,7 +81,7 @@ public class Scene extends PApplet {
         PVector specular = new PVector(255.f, 255.f, 212.f);
         float shininess = 255.f;
         Material mat = new Material(this, ambient, emissive, specular, shininess);
-        star = new SceneObject(this, new PVector(3 * width / 4.f, -height / 6.f, -1000.f), starShape, new Texture(img, null), mat, null);
+        star = new SceneObject(this, new PVector(3 * width / 4.f, -height / 6.f, -1000.f), starShape, new Texture(img), mat);
     }
 
     private void renderFloor() {
@@ -93,7 +93,7 @@ public class Scene extends PApplet {
         PVector specular = new PVector(174.f, 166.f, 166.f);
         float shininess = 128.f;
         Material mat = new Material(this, ambient, emissive, specular, shininess);
-        floor = new SceneObject(this, new PVector(0, 0, 0), floorShape, new Texture(img, null), mat, null);
+        floor = new SceneObject(this, new PVector(0, 0, 0), floorShape, new Texture(img), mat);
     }
 
     public void draw() {
@@ -101,10 +101,7 @@ public class Scene extends PApplet {
 
         placeMouseCenter();
 
-        strokeWeight(10);
-        fill(255,0,0);
         player.refresh();
-        point(player.getCenter().x, player.getCenter().y, player.getPos().z);
 
         lightSetting();
 
